@@ -1,6 +1,9 @@
 import Point from './point';
 
 export default interface Room {
+  // 房间id
+  id: number;
+
   // 房间位置X
   start: Point;
 

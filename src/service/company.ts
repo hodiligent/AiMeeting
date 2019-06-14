@@ -15,7 +15,7 @@ export async function addRoom(room: Room) {
   if (conflict) {
     return false;
   }
-  await db.query(
+  const result = await db.query(
     rsql.INSERT_NEW_ROOM(
       room.name,
       room.capacity,
@@ -23,6 +23,25 @@ export async function addRoom(room: Room) {
       JSON.stringify(room.end)
     )
   );
+  if(result <= 0) {
+    return false;
+  }
+  return true;
+}
+
+export async function deleteRoom(id: number) {
+  const result = await db.query(rsql.DELETE_ROOM(id));
+  if(result <= 0) {
+    return false;
+  }
+  return true;
+}
+
+export async function updateRoom(room: Room) {
+  const result = await db.query(rsql.UPDATE_ROOM(room.id,room.name,room.capacity,room.status));
+  if(result <= 0) {
+    return false;
+  }
   return true;
 }
 
@@ -32,6 +51,7 @@ export async function addRoom(room: Room) {
  */
 export async function queryRoom() {
   const results = await db.query(rsql.QUERY_ALL_ROOM);
+  DB.company.roomList = [];
   for (let r of results) {
     let start = JSON.parse(r.start_point);
     let end = JSON.parse(r.end_point);
@@ -44,13 +64,13 @@ export async function queryRoom() {
       y: end.y
     };
     let room: Room = {
+      id: r.id,
       start: startPoint,
       end: endPoint,
       capacity: r.capacity,
       name: r.name,
       status: r.status
     };
-    // console.log(room);
     DB.company.roomList.push(room);
   }
   return DB.company.roomList;

@@ -1,7 +1,7 @@
 import * as Router from 'koa-router';
 import Room from '../model/room';
 import Result from '../model/result';
-import { queryRoom, addRoom } from '../service/company';
+import { queryRoom, addRoom, deleteRoom, updateRoom } from '../service/company';
 
 let router = new Router();
 
@@ -20,5 +20,25 @@ router.post('/addroom', async ctx => {
   }
   //TODO  定义 Result 模型，并返回值
 });
+
+router.post('/delete', async ctx => {
+  let room: Room = ctx.request.body;
+  let isDeleteSuccess = await deleteRoom(room.id);
+  if (isDeleteSuccess) {
+    ctx.body = Result.success("");
+  } else {
+    ctx.body = Result.error('房间删除失败', '1002');
+  }
+})
+
+router.post('/update', async ctx => {
+  let room: Room = ctx.request.body;
+  let isUpdateSuccess = await updateRoom(room);
+  if (isUpdateSuccess) {
+    ctx.body = Result.success(room);
+  } else {
+    ctx.body = Result.error('房间更新失败', '1003');
+  }
+})
 
 export default router;
