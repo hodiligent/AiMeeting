@@ -14,7 +14,7 @@
     "koa-body": "^4.1.0",
     "koa-router": "^7.4.0",
     "promise-mysql": "^3.3.2",
-    "sequelize": "^5.8.7"
+    "sequelize": "^5.15.1"
   },
   "devDependencies": {
     "@types/koa": "^2.0.48",
